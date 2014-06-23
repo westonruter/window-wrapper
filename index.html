@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script>
+		var pageNumber = ( parseInt( window.location.search.substr( 1 ), 10 ) || 1 );
+		</script>
+		<script>document.write( '<title>Page ' + pageNumber + '</title>' )</script>
+		<link src="wrapped-window.css" rel="stylesheet">
+		<script src="//code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="wrapped-window.js"></script>
+		<script>
+		WrappedWindow.init();
+		</script>
+	</head>
+	<body>
+		<h1>Page <script>document.write( pageNumber )</script></h1>
+		<p>Go to <script>document.write( '<a href="?' + ( pageNumber + 1 ) + '">page ' + ( pageNumber + 1 ) + '</a>' )</script>.</p>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Loading&hellip;</title>
+		<link href="window-wrapper.css" rel="stylesheet">
+	</head>
+	<body>
+		<iframe id="window" src="about:blank"></iframe>
+		<p id="notice" title="If the background color here changes, you know that the wrapper window got reloaded.">
+			You're viewing a wrapped window!
+			<input value="">
+		</p>
+		<script src="//code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="window-wrapper.js"></script>
+		<script>
+		WindowWrapper.init();
+		</script>
+	</body>
+</html>
