@@ -44,10 +44,11 @@ var WindowWrapper = ( function ( $ ) {
 	 * @returns {String}
 	 */
 	self.randomHexColor = function () {
-		var color, i;
+		var color, i, number;
 		color = '';
 		for ( i = 0; i < 3; i += 1 ) {
-			color += self.zeroPad( Math.floor( Math.random() * 255 ).toString( 16 ) );
+			number = 127 + Math.floor( Math.random() * 127 );
+			color += self.zeroPad( number.toString( 16 ) );
 		}
 		return color;
 	};
