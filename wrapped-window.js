@@ -89,6 +89,16 @@ var WrappedWindow = ( function ( $ ) {
 			}
 		} );
 		toggle.show();
+
+		// Make sure link is on same origin, as otherwise, the iframe may fail to load due to a cross-domain security warning
+		// Refused to display '...' in a frame because it set 'X-Frame-Options' to 'deny'.
+		if ( self.isWrapped() ) {
+			$( 'body' ).on( 'click', 'a[href]', function () {
+				if ( this.hostname !== location.hostname || this.protocol !== location.protocol || this.port !== location.port ) {
+					$( this ).prop( 'target', '_parent' );
+				}
+			} );
+		}
 	};
 
 	$( function () {
