@@ -83,7 +83,7 @@ var WrappedWindow = ( function ( $ ) {
 			var isEnabled = self.enabled();
 			self.enabled( ! isEnabled );
 			if ( isEnabled ) {
-				parent.location = window.location;
+				parent.location.replace( window.location );
 			} else {
 				self.enterWrappedWindow();
 			}
