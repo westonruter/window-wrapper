@@ -1,0 +1,13 @@
+dt {
+	float: left;
+	clear: left;
+	font-weight: bold;
+}
+dt:after {
+	content: ":";
+	margin-right: 1ex;
+}
+dd {
+	margin-left: 0;
+	margin-bottom: 1em;
+}

@@ -5,18 +5,60 @@
 		<script>
 		var pageNumber = ( parseInt( window.location.search.substr( 1 ), 10 ) || 1 );
 		</script>
-		<script>document.write( '<title>Page ' + pageNumber + '</title>' )</script>
+		<script>document.write( '<title>Page ' + pageNumber + ' | Window Wrapper POC</title>' )</script>
 		<link src="wrapped-window.css" rel="stylesheet">
 		<script src="//code.jquery.com/jquery-1.11.1.js"></script>
 		<script src="wrapped-window.js"></script>
+		<link rel="stylesheet" href="wrapped-window.css">
 		<script>
 		WrappedWindow.init();
 		</script>
+		<link rel="canonical" href="/">
 	</head>
 	<body>
-		<h1>Page <script>document.write( pageNumber.toString() )</script></h1>
+		<h1>Window Wrapper Proof of Concept</h1>
+		<h2>Page <script>document.write( pageNumber.toString() )</script></h2>
 		<p>Go to <script>document.write( '<a href="?' + ( pageNumber + 1 ) + '">page ' + ( pageNumber + 1 ) + '</a>' )</script>.</p>
-
 		<p><button hidden type="button" id="toggle">Loading...</button></p>
+
+		<hr>
+		<h2><em>What is this?</em></h2>
+
+		<p>Most websites consist of multiple pages. When you browse the site, you navigate from page to page, and with each page load you end up unloading and reloading much of the logic. What if you want to have some part of your site experience to persist from page to page without having to be re-initialized with each page load?</p>
+
+		<p>Take Facebook for example. There are persistent chats that are docked to the bottom of the window: you navigate from newsfeed to profile to settings without the chat ever going away. Facebook has accomplished this by architecting their site as a single-page app: when you click from the newsfeed to a friend's profile, JavaScript does a <code>history.pushState()</code> to change the URL of the current page, and replaces the page content via Ajax. This allows the chat to remain persistent, even though it <em>seems</em> like you are navigating to different pages on the site.</p>
+
+		<p>What if you want to add persistent component across pages of an existing site? Well, you can't take Facebook's approach without fundamentally re-architecting your site to be able to load all content from other pages via Ajax. On many sites this is impossible because they may have scripts (e.g. ads) that depend on <code>document.write()</code> which can't execute after the page has been initially loaded.</p>
+
+		<p>This proof of concept demonstrates another way.</p>
+
+		<p>Each page in this demo includes the same <code>WrappedWindow</code> code. When you activate the wrapped window, a <code>location.replace()</code> takes you to <code>window-wrapper.html</code> with the previous URL supplied as a query argument. On that page, an <code>iframe</code> is embedded in the page filling the entire window, and the <code>iframe</code> is loaded with the URL from the originating page. Once this <code>iframe</code> loads, <code>history.replaceState()</code> is invoked to rewrite the URL to be the same as the URL in the <code>iframe</code>, which is the original URL from which the functionality was invoked. There is a slight flicker in the URL bar when this process happns, but for subsequent page loads in the wrapped window, it seems like you are browsing the site normally. The <code>iframe</code> window also updates the parent window's <code>document.title</code> to match. When you navigate to another page within the <code>iframe</code>, it again updates the parent window's title and rewrites the URL. </p>
+
+		<p>In the parent window (<code>WindowWrapper</code>), however, there is a bar that is positioned at the bottom of the window. This bar is given a random background color when the parent page loads. As you navigate around the site, you should see that the bar's color does not change. The <code>marquee</code> (yay!) in the bar also doesn't reset with each page load because the parent window remains intact when the <code>iframe</code> is navigated.</p>
+
+		<p>Interestingly, when navigating in the <code>iframe</code> window, the browser will store history entries and allow the window to be navigated with the browser's back and forward buttons leaving the parent window (the window wrapper) intact. At least, that's how it's supposed to work. Browsers seem to have different degrees of support for this.</p>
+
+		<dl>
+			<dt>Chrome</dt>
+			<dd>By far the best experience is in Chrome. When you navigate in the wrapped window, you can then use the browser's history to go back and then forward again without causing the parent window to reload. Even so, you can also reload the page with backward and forward history entries and upon the window wrapper reloading, the contained window wrapper will still be able to navigate back and forward without causing the window wrapper to reload. <em>However</em>, if you navigate too far back so that the parent window navigates to a previous page, then when you go forward again each navigation after that will cause the parent window to reload as each history entry is loaded.</dd>
+
+			<dt>Firefox</dt>
+			<dd>The experience in Firefox is similar to Chrome, except that if you reload the window while the wrapped window has backward and forward history entries, when the window wrapper re-initializes any subsequent history navigation will navigate the parent window, not the wrapped window. This means that every navigation event shows that momentary redirect in the URL bar.</dd>
+
+			<dt>Safari</dt>
+			<dd>The experience in Firefox is the same as in Safari, except that Safari seemed to sometimes stop recognizing history navigation: if 10 pages are navigated, Safari may correctly navigate backward 5 pages but then after that any navigation to previous pages would update the URL but the <code>iframe</code> window would remain unchanged.</dd>
+
+			<dt>Internet Explorer</dt>
+			<dd>Unknown</dd>
+		</dl>
+
+		<hr>
+		<footer>
+			<address>
+				<a href="http://weston.ruter.net" rel="author">Weston Ruter</a>,
+				<a href="http://x-team.com/wordpress/">X-Team WP</a>
+			</address>
+		</footer>
+
 	</body>
 </html>
