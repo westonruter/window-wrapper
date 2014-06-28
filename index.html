@@ -6,6 +6,7 @@
 		var pageNumber = ( parseInt( window.location.search.substr( 1 ), 10 ) || 1 );
 		</script>
 		<script>document.write( '<title>Window Wrapper POC' + ( pageNumber > 1 ? ' (page ' + pageNumber + ' )' : '' ) + '</title>' )</script>
+		<meta name="viewport" content="width=device-width, user-scalable=yes">
 		<link src="wrapped-window.css" rel="stylesheet">
 		<script src="//code.jquery.com/jquery-1.11.1.js"></script>
 		<script src="wrapped-window.js"></script>
